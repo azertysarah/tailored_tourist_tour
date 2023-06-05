@@ -4,18 +4,15 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule }  from '@angular/material/button';
 import { HttpClientModule } from '@angular/common/http';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ResearchComponent } from './research/research.component';
-import { ResultsComponent } from './results/results.component';
 import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ResearchComponent,
-    ResultsComponent,
     MapComponent
   ],
   imports: [
@@ -24,7 +21,8 @@ import { MapComponent } from './map/map.component';
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

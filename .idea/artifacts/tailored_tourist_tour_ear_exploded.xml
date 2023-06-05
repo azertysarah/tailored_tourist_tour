@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-ear" name="tailored_tourist_tour:ear exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/tailored_tourist_tour_ear_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="tailored_tourist_tour/javaeeApplication/javaEEApplication" />
+      <element id="directory" name="web.war">
+        <element id="artifact" artifact-name="tailored_tourist_tour:war exploded" />
+      </element>
+    </root>
+  </artifact>
+</component>

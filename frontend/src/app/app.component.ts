@@ -1,40 +1,61 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { T3Service } from './t3.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'frontend';
 
-  monument = "";
+  // periods: any;
+  // communes: any;
+  result: any;
 
   researchForm = new FormGroup({
-    location: new FormControl('', Validators.required),
-    period: new FormControl('', Validators.required),
-    time: new FormControl(null, Validators.required),
-    budget: new FormControl(null)
+    monument: new FormControl(''),
+    commune: new FormControl(''),
+    period: new FormControl(''),
+    time: new FormControl(null)
   })
 
   constructor(
-    private http: HttpClient
+    private t3service: T3Service
   ) {}
 
+  ngOnInit(): void {
+    // this.getAllPeriods();
+    // this.getAllCommunes();
+  }
+
+  // getAllPeriods() {
+  //   this.t3service.getAllPeriods().subscribe({
+  //     next: (res: any) => this.periods = res,
+  //     error: () => console.warn('An error occured')
+  //   });
+  // }
+
+  // getAllCommunes(){
+  //   this.t3service.getAllCommunes().subscribe({
+  //     next: (res: any) => this.communes = res,
+  //     error: () => console.warn('An error occured')
+  //   });
+  // }
+
   onSubmit() {
-    return this.http.post('http://localhost:8080/tours', this.researchForm.value).subscribe({
-      next: (reponses) => {
-        const monuments = reponses as string[];
-        const time = this.researchForm.get('time')?.value
-        console.log(reponses);
-        if (monuments && monuments.length > 0  && time) {
-          this.monument = "Vous pouvez visiter pendant " + time + " de jour(s) : ";
-          this.monument += monuments.reduce((prev, next) => prev + ', ' + next) + '.';
-        }
+    this.t3service.postSearch(this.researchForm.value).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.result = res;
+        // const time = this.researchForm.get('time')?.value
+        // if (monuments && monuments.length > 0  && time) {
+        //   this.result = "Vous pouvez visiter pendant " + time + " de jour(s) : ";
+        //   this.result += monuments.reduce((prev, next) => prev + ', ' + next) + '.';
+        // }
       },
-      error: (err: any) => this.monument = ""
+      error: () => this.result = "An error occured ..."
     });
   }
 }

@@ -28,25 +28,24 @@ public class FormController {
         this.monumentRepository = monumentRepository;
     }
     @PostMapping("/tours")
-    public ResponseEntity<List<String>> handleFormSubmission(@RequestBody FormData formData) {
-        String location = formData.getLocation();
+    public ResponseEntity<List<Monument>> handleFormSubmission(@RequestBody FormData formData) {
+        String monument = formData.getMonument();
+        String commune = formData.getCommune();
         String period =  formData.getPeriod();
         int time = formData.getTime();
-        int budget = formData.getBudget();
 
 
         List<Monument> monumentList = monumentRepository
-                .findByCommuneAndBySiecle(location, period);
+                .findByCommuneAndBySiecle(commune, period);
         //Search Abbeville, 2e moitié 18e siècle
         List<String> centuriesList = monumentList.stream()
                 .map(Monument::getNom)
                 .limit(time * 2L)
                 .toList();
         System.out.println(centuriesList);
-        System.out.println(location + period + time + budget);
+        System.out.println(commune + period + time);
         System.out.println(monumentList);
 
-
-        return new ResponseEntity<>(centuriesList, HttpStatus.OK);
+        return new ResponseEntity<>(monumentList, HttpStatus.OK);
     }
 }

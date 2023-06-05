@@ -1,17 +1,25 @@
 package com.example.backend2.model;
 
 public class FormData {
-    private String location;
+    private String monument;
+    private String commune;
     private String period;
     private int time;
-    private int budget;
 
-    public String getLocation() {
-        return location;
+    public String getMonument() {
+        return monument;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setMonument(String monument) {
+        this.monument = monument;
+    }
+
+    public String getCommune() {
+        return commune;
+    }
+
+    public void setCommune(String commune) {
+        this.commune = commune;
     }
 
     public String getPeriod() {
@@ -28,13 +36,5 @@ public class FormData {
 
     public void setTime(int time) {
         this.time = time;
-    }
-
-    public int getBudget() {
-        return budget;
-    }
-
-    public void setBudget(int budget) {
-        this.budget = budget;
     }
 }
