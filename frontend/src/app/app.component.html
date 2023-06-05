@@ -1,0 +1,36 @@
+<div class="container">
+  <header>
+    <h1>T2: Tailored Tourist Tour</h1>
+  </header>
+  <div class="left-side box">
+    <h2>Research</h2>
+    <form [formGroup]="researchForm">
+      <mat-form-field>
+        <mat-label>Location</mat-label>
+        <input matInput type="text" formControlName="location">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Period of time</mat-label>
+        <input matInput type="text" formControlName="period">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Travel time (in days)</mat-label>
+        <input matInput type="number" formControlName="time">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Spending budget</mat-label>
+        <input matInput type="text" formControlName="budget">
+      </mat-form-field>
+      <br><br>
+      <button
+      mat-stroked-button [disabled]="!researchForm.valid" (click)="onSubmit()">Search</button>
+    </form>
+    <br><br>
+    <h2>Results</h2>
+    <p>{{monument}}</p>
+  </div>
+
+</div>
