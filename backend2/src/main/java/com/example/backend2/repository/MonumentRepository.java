@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface MonumentRepository extends MongoRepository<Monument, String> {
 
-    @Query("{'$and': [{ 'fields.commune':  ?0}, {'fields.siecle':  ?1}]}")
-    public List<Monument> findByCommuneAndBySiecle(String commune, String siecle);
+    @Query("{'$and': [{'fields.siecle':  ?0}]}")
+    public List<Monument> findByPeriod(String siecle);
 
     @Query("{'$and': [{ 'fields.appellation_courante':  ?0}]}")
     public Monument findByName(String name);

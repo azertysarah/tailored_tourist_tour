@@ -1,5 +1,5 @@
-import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
+import { Component, OnChanges, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { T3Service } from './t3.service';
 import { MapComponent } from './map/map.component';
 
@@ -18,13 +18,14 @@ export class AppComponent implements OnChanges {
   // periods: any;
   // communes: any;
   results: any[] = [];
-  updatedMonuments: any;
+  updatedMonuments: any[] = [];
 
   researchForm = new FormGroup({
     monumentName: new FormControl('', Validators.required),
-    commune: new FormControl(''),
+    region: new FormControl(''),
     period: new FormControl(''),
-    time: new FormControl(null, Validators.required)
+    time: new FormControl(null, Validators.required),
+    needRealTime: new FormControl(false, Validators.required)
   })
 
   constructor(
@@ -52,6 +53,7 @@ export class AppComponent implements OnChanges {
   // }
 
   onSubmit() {
+    console.log(this.researchForm.value);
     this.isLoading = true;
     this.t3service.postSearch(this.researchForm.value).subscribe({
       next: (res: any) => {
@@ -65,6 +67,7 @@ export class AppComponent implements OnChanges {
         this.updatedMonuments = this.results; 
       },
       error: () => {
+        this.isLoading = false;
         console.warn("An error occured in postSearch() method"),
         this.errorMessage = "Result unavailable"
       },

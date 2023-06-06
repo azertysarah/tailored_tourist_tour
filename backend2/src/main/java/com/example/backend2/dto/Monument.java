@@ -34,6 +34,8 @@ public class Monument {
         private String siecle;
         private String code_departement;
         private String departement;
+
+
         private String commune;
 
         // Getters and setters
@@ -44,6 +46,12 @@ public class Monument {
         public String getName() {
             return appellation_courante;
         }
+        public String getRegion() {
+            return region;
+        }
+        public String getSiecle() {
+            return siecle;
+        }
     }
 
     @Override
@@ -51,6 +59,8 @@ public class Monument {
         return "{" +
                 "name: '" + fields.appellation_courante +
                 "', coordinates: " + fields.p_coordonnees +
+                "', region: " + fields.region +
+                "', period: " + fields.siecle +
                 '}';
     }
 }

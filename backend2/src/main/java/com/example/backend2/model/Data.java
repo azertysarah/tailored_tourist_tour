@@ -1,10 +1,12 @@
 package com.example.backend2.model;
 
-public class FormData {
+public class Data {
     private String monumentName;
-    private String commune;
+    private String region;
     private String period;
     private int time;
+
+    private boolean needRealTime;
 
     public String getMonumentName() {
         return monumentName;
@@ -14,12 +16,12 @@ public class FormData {
         this.monumentName = monumentName;
     }
 
-    public String getCommune() {
-        return commune;
+    public String getRegion() {
+        return region;
     }
 
-    public void setCommune(String commune) {
-        this.commune = commune;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public String getPeriod() {
@@ -36,5 +38,13 @@ public class FormData {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public boolean isNeedRealTime() {
+        return needRealTime;
+    }
+
+    public void setNeedRealTime(boolean needRealTime) {
+        this.needRealTime = needRealTime;
     }
 }

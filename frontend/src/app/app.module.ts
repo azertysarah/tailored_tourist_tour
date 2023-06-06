@@ -6,6 +6,8 @@ import { MatButtonModule }  from '@angular/material/button';
 import { HttpClientModule } from '@angular/common/http';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,7 +26,9 @@ import { MapComponent } from './map/map.component';
     MatButtonModule,
     HttpClientModule,
     MatAutocompleteModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

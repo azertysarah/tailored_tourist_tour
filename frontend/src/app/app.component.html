@@ -12,8 +12,8 @@
         </mat-form-field>
         <br>
         <mat-form-field>
-          <mat-label>Commune</mat-label>
-          <input matInput type="text" formControlName="commune">
+          <mat-label>Region</mat-label>
+          <input matInput type="text" formControlName="region">
         </mat-form-field>
         <br>
         <mat-form-field>
@@ -25,9 +25,10 @@
           <mat-label>Travel time (in days)</mat-label>
           <input matInput type="number" formControlName="time">
         </mat-form-field>
+        <br>
+          <mat-checkbox formControlName="needRealTime">Take real travel time into account</mat-checkbox>
         <br><br>
-        <button
-        mat-stroked-button [disabled]="!researchForm.valid" (click)="onSubmit()">Search</button>
+        <button mat-stroked-button [disabled]="!researchForm.valid" (click)="onSubmit()">Search</button>
       </form>
     </div>
     <br><br>

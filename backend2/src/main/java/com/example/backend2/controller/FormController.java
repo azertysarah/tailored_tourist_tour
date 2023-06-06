@@ -1,8 +1,7 @@
 package com.example.backend2.controller;
 
 import com.example.backend2.dto.Monument;
-import com.example.backend2.dto.TourMonument;
-import com.example.backend2.model.FormData;
+import com.example.backend2.model.Data;
 import com.example.backend2.repository.MonumentRepository;
 import com.example.backend2.service.MonumentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.round;
+
 @CrossOrigin(origins = "http://localhost:4200/")
 @RestController
 public class FormController {
@@ -28,56 +29,67 @@ public class FormController {
         this.monumentService = monumentService;
     }
     @PostMapping("/tours")
-    public ResponseEntity<List<Monument>> handleFormSubmission(@RequestBody FormData formData) {
+    public ResponseEntity<List<Monument>> handleFormSubmission(@RequestBody Data data) {
         // Data form values
-        String monumentName = formData.getMonumentName();
-        String commune = formData.getCommune();
-        String period =  formData.getPeriod();
-        int time = formData.getTime();
+        String monumentName = data.getMonumentName();
+        String region = data.getRegion();
+        String period =  data.getPeriod();
+        int time = data.getTime();
+        boolean needRealTime = data.isNeedRealTime();
 
         // Get the input monument from the database
         Monument monument = this.monumentRepository.findByName(monumentName);
 
-        // Get the coordinates of the monument
-        List<Double> coordinates = monument.getFields().getCoordinates();
-        Double latitude = coordinates.get(0);
-        Double longitude = coordinates.get(1);
+        // Get all the monuments from the database
+        List<Monument> monuments = monumentRepository.findAll();
 
-        // Get the nearest monuments
-        List<Monument> nearestMonuments = this.monumentService.findNearestMonuments(latitude, longitude, time*2);
-        //System.out.println(nearestMonuments.toString());
-        //List<TourMonument> tourMonuments = getInShape(nearestMonuments);
-        //System.out.println(tourMonuments);
+        // Filter the results if there is a requested period
+        if(period != "") monuments = filterByPeriod(period, monuments);
 
-        // Delete the ones that are not in the selected commune
-        // Delete the ones that are not from the selected period
-        // Do something about
+        /*List<Monument> monuments;
+        if(period != "") {
+            List<Monument> filteredMonuments = monumentRepository.findByPeriod(period);
+            monuments = filterByPeriod(period, filteredMonuments);
+        } else {
+            monuments = monumentRepository.findAll();
+        }*/
 
+        // Get the nearest monuments from the requested monument
+        List<Monument> nearestMonuments = this.monumentService.findNearestMonuments(monument, monuments);
+        // System.out.println(nearestMonuments.toString());
 
-        /*List<Monument> monumentList = monumentRepository
-                .findByCommuneAndBySiecle(commune, period);
-        //Search Abbeville, 2e moitié 18e siècle
-        List<String> centuriesList = monumentList.stream()
-                .map(Monument::getNom)
-                .limit(time * 2L)
-                .toList();
-        System.out.println(centuriesList);
-        System.out.println(commune + period + time);
-        System.out.println(monumentList);*/
+        // Delete the ones that are not in the selected region
+        //if(region != "") nearestMonuments = filterByRegion(region, nearestMonuments);
 
+        // Take the travel time into account
+        if(needRealTime) nearestMonuments = getRealTour(nearestMonuments, time);
+
+        // Send response
         return new ResponseEntity<>(nearestMonuments, HttpStatus.OK);
     }
 
-    /*private static List<TourMonument> getInShape(List<Monument> monuments) {
-        List<TourMonument> tourMonumentsList = new ArrayList<>();
-        for(Monument monument : monuments) {
-            double latitude = monument.getFields().getCoordinates().get(0);
-            double longitude = monument.getFields().getCoordinates().get(1);
-            String name = monument.getFields().getName();
-
-            TourMonument tourMonument = new TourMonument(latitude, longitude, name);
-            tourMonumentsList.add(tourMonument);
+    public List<Monument> filterByPeriod(String period, List<Monument> monuments){
+        List<Monument> filteredMonuments = monumentRepository.findByPeriod(period);
+        for (Monument monument : monuments){
+            if(monument.getFields().getSiecle() != null && monument.getFields().getSiecle().contains(period)) {
+                filteredMonuments.add(monument);
+            }
         }
-        return tourMonumentsList;
-    }*/
+        return filteredMonuments;
+    }
+
+    public List<Monument> getRealTour(List<Monument> monuments, int time){
+        double timeLimit = time*16; // time*24 for days-hours conversion and time*8 for sleeping time per day
+        List<Monument> realTour = new ArrayList<>();
+        Monument initialMonument = monuments.remove(0);
+        realTour.add(initialMonument);
+        while(!monuments.isEmpty() || timeLimit>0) {
+            Monument currentMonument = monuments.remove(0);
+            double pathTime = 5/currentMonument.getDistance(); // We suppose that the average speed of a walking person is equal to 5km/h
+            timeLimit = timeLimit - round(pathTime)- 3; // We suppose that it takes 3 hours to visit a monument
+            realTour.add(currentMonument);
+            monuments = monumentService.findNearestMonuments(currentMonument, monuments);
+        }
+        return realTour;
+    }
 }

@@ -17,28 +17,37 @@ public class MonumentService {
         this.monumentRepository = monumentRepository;
     }
 
-    public List<Monument> findNearestMonuments(double inputLatitude, double inputLongitude, int limit) {
-        List<Monument> monuments = monumentRepository.findAll();
-        List<Monument> monumentsWithCoordinates = new ArrayList<>();
+    public List<Monument> findNearestMonuments(Monument monument, List<Monument> monuments) {
+        // Maximum distance is set to for 1 hour walking at the speed of 5km/h
+        double maximumDistance = 10;
+
+        // Get the coordinates of the monument
+        List<Double> coordinates = monument.getFields().getCoordinates();
+        Double monumentLatitude = coordinates.get(0);
+        Double monumentLongitude = coordinates.get(1);
+
+        // To prevent having monuments that has no coordinates
+        List<Monument> nearestMonuments = new ArrayList<>();
 
         // Calculate distances and sort the monuments based on their distance to the inputted monument
-        monuments.forEach(monument -> {
-            if(monument.getFields().getCoordinates() != null) {
-                monument.setDistance(
+        monuments.forEach(item -> {
+            if(item.getFields().getCoordinates() != null) {
+                item.setDistance(
                         calculateDistance(
-                                inputLatitude,
-                                inputLongitude,
-                                monument.getFields().getCoordinates().get(0),
-                                monument.getFields().getCoordinates().get(1)
+                                monumentLatitude,
+                                monumentLongitude,
+                                item.getFields().getCoordinates().get(0),
+                                item.getFields().getCoordinates().get(1)
                         )
                 );
-                monumentsWithCoordinates.add(monument);
+                if(item.getDistance() <= maximumDistance) nearestMonuments.add(item);
             }
         });
-        monumentsWithCoordinates.sort(Comparator.comparingDouble(Monument::getDistance));
-
-        System.out.println(monumentsWithCoordinates.subList(0, Math.min(limit, monuments.size())));
-        return monumentsWithCoordinates.subList(0, Math.min(limit, monuments.size()));
+        // Sort list from most near monuments to most far
+        nearestMonuments.sort(Comparator.comparingDouble(Monument::getDistance));
+        return nearestMonuments;
+        //System.out.println(nearestMonuments.subList(0, Math.min(monuments.size(), monuments.size())));
+        //return nearestMonuments.subList(0, Math.min(monuments.size(), monuments.size()));
     }
 
     private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
