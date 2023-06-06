@@ -46,8 +46,6 @@ public class MonumentService {
         // Sort list from most near monuments to most far
         nearestMonuments.sort(Comparator.comparingDouble(Monument::getDistance));
         return nearestMonuments;
-        //System.out.println(nearestMonuments.subList(0, Math.min(monuments.size(), monuments.size())));
-        //return nearestMonuments.subList(0, Math.min(monuments.size(), monuments.size()));
     }
 
     private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {

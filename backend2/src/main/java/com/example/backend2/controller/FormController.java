@@ -46,14 +46,6 @@ public class FormController {
         // Filter the results if there is a requested period
         if(period != "") monuments = filterByPeriod(period, monuments);
 
-        /*List<Monument> monuments;
-        if(period != "") {
-            List<Monument> filteredMonuments = monumentRepository.findByPeriod(period);
-            monuments = filterByPeriod(period, filteredMonuments);
-        } else {
-            monuments = monumentRepository.findAll();
-        }*/
-
         // Get the nearest monuments from the requested monument
         List<Monument> nearestMonuments = this.monumentService.findNearestMonuments(monument, monuments);
         // System.out.println(nearestMonuments.toString());

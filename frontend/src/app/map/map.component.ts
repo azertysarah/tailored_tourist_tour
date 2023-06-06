@@ -11,6 +11,7 @@ export class MapComponent implements OnChanges{
   
   map: L.Map | any;
   markersLayer: L.LayerGroup | any;
+  coordinates: any[] = [];
 
   markerIcon = L.icon({
     iconUrl: '../../assets/marker-icon.png',
@@ -47,8 +48,11 @@ export class MapComponent implements OnChanges{
         L.marker(item.coordinates, { icon: this.markerIcon })
           .bindPopup(item.name)
           .addTo(this.markersLayer);
+        
+        this.coordinates.push(item.coordinates);
       }
       this.map.setView(this.monuments[1].coordinates, 13);
+      const polyline = L.polyline(this.coordinates, { color: 'coral'}).addTo(this.map);
     }
   }
 }
