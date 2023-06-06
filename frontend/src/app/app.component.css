@@ -11,9 +11,12 @@ h1 {
     display: flex;
     justify-content: center;
 }
-.left-side {
-    padding: 0 10rem 0 5rem;
+.right-side {
+    margin-left: 5rem;
 }
 mat-form-field {
     width: 15rem;
+}
+mat-spinner {
+    margin: 4rem auto 0 auto;
 }

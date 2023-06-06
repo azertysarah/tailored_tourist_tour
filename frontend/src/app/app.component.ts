@@ -12,6 +12,8 @@ export class AppComponent implements OnChanges {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   
   title = 'frontend';
+  errorMessage: string = '';
+  isLoading: boolean = false;
 
   // periods: any;
   // communes: any;
@@ -50,6 +52,7 @@ export class AppComponent implements OnChanges {
   // }
 
   onSubmit() {
+    this.isLoading = true;
     this.t3service.postSearch(this.researchForm.value).subscribe({
       next: (res: any) => {
         for(let monument of res) {
@@ -61,7 +64,11 @@ export class AppComponent implements OnChanges {
         }
         this.updatedMonuments = this.results; 
       },
-      error: () => console.warn("An error occured in postSearch() method")
+      error: () => {
+        console.warn("An error occured in postSearch() method"),
+        this.errorMessage = "Result unavailable"
+      },
+      complete: () => this.isLoading = false
     });
   }
   updateMonuments() {

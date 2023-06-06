@@ -12,6 +12,11 @@ export class MapComponent implements OnChanges{
   map: L.Map | any;
   markersLayer: L.LayerGroup | any;
 
+  markerIcon = L.icon({
+    iconUrl: '../../assets/marker-icon.png',
+    shadowUrl: '../../assets/marker-shadow.png'
+  });
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
       console.warn(this.monuments);
@@ -39,7 +44,7 @@ export class MapComponent implements OnChanges{
       this.markersLayer.clearLayers();
 
       for (let item of this.monuments) {
-        L.marker(item.coordinates)
+        L.marker(item.coordinates, { icon: this.markerIcon })
           .bindPopup(item.name)
           .addTo(this.markersLayer);
       }
