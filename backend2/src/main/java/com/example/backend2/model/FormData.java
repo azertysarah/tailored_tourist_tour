@@ -1,17 +1,17 @@
 package com.example.backend2.model;
 
 public class FormData {
-    private String monument;
+    private String monumentName;
     private String commune;
     private String period;
     private int time;
 
-    public String getMonument() {
-        return monument;
+    public String getMonumentName() {
+        return monumentName;
     }
 
-    public void setMonument(String monument) {
-        this.monument = monument;
+    public void setMonumentName(String monumentName) {
+        this.monumentName = monumentName;
     }
 
     public String getCommune() {

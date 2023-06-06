@@ -1,4 +1,4 @@
-package com.example.backend2.db;
+package com.example.backend2.dto;
 
 import java.util.List;
 

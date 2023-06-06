@@ -7,7 +7,7 @@
     <form [formGroup]="researchForm">
       <mat-form-field>
         <mat-label>Monument</mat-label>
-        <input matInput type="text" formControlName="monument">
+        <input matInput type="text" formControlName="monumentName">
       </mat-form-field>
       <br>
       <mat-form-field>
@@ -30,11 +30,11 @@
     </form>
     <br><br>
     <h2>Result</h2>
-    <ul *ngFor="let item of result">
-      <li>{{item}}</li>
+    <ul *ngFor="let item of results">
+      <li>{{item.name}}</li>
     </ul>
   </div>
   <div class="right-side">
-    <app-map></app-map>
+    <app-map [monuments]="updatedMonuments"></app-map>
   </div>
 </div>

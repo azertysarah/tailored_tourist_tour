@@ -1,31 +1,36 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, RequiredValidator, Validators } from '@angular/forms';
 import { T3Service } from './t3.service';
+import { MapComponent } from './map/map.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnChanges {
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
+  
   title = 'frontend';
 
   // periods: any;
   // communes: any;
-  result: any;
+  results: any[] = [];
+  updatedMonuments: any;
 
   researchForm = new FormGroup({
-    monument: new FormControl(''),
+    monumentName: new FormControl('', Validators.required),
     commune: new FormControl(''),
     period: new FormControl(''),
-    time: new FormControl(null)
+    time: new FormControl(null, Validators.required)
   })
 
   constructor(
     private t3service: T3Service
   ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    console.warn(this.results)
     // this.getAllPeriods();
     // this.getAllCommunes();
   }
@@ -47,15 +52,19 @@ export class AppComponent implements OnInit {
   onSubmit() {
     this.t3service.postSearch(this.researchForm.value).subscribe({
       next: (res: any) => {
-        console.log(res);
-        this.result = res;
-        // const time = this.researchForm.get('time')?.value
-        // if (monuments && monuments.length > 0  && time) {
-        //   this.result = "Vous pouvez visiter pendant " + time + " de jour(s) : ";
-        //   this.result += monuments.reduce((prev, next) => prev + ', ' + next) + '.';
-        // }
+        for(let monument of res) {
+          this.results.push({
+            name: monument.fields.name,
+            coordinates: monument.fields.coordinates,
+            distance: monument.distance
+          })
+        }
+        this.updatedMonuments = this.results; 
       },
-      error: () => this.result = "An error occured ..."
+      error: () => console.warn("An error occured in postSearch() method")
     });
+  }
+  updateMonuments() {
+    this.mapComponent.monuments = this.updatedMonuments;
   }
 }
